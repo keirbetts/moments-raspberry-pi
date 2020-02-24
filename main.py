@@ -21,7 +21,8 @@ counter = 0
 for url in pictureUrls:
     print(url)
     counter += 1
-    urllib.request.urlretrieve(url, "{}.png".format(counter))
+    urllib.request.urlretrieve(
+        url, "/home/domh/Pictures/temp/{}.jpg".format(counter))
 
 
 # contact db and get list of all urls from db
