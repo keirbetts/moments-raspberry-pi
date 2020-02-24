@@ -5,9 +5,11 @@ import threading
 
 # make connection to dynamo db
 
+newUrlCount = 0
+
 
 def getUrls():
-
+    global newUrlCount
     threading.Timer(10.0, getUrls).start()
     client = boto3.resource('dynamodb')
 
@@ -22,12 +24,17 @@ def getUrls():
     # iterate through and dl photos
 
     pictureUrls = response["Item"]["picURL"]
-    counter = 0
-    for url in pictureUrls:
-        print(url)
-        counter += 1
-        urllib.request.urlretrieve(
-            url, "/home/domh/Pictures/temp/{}.jpg".format(counter))
+
+    print(len(pictureUrls))
+
+    if(newUrlCount != len(pictureUrls)):
+        counter = 0
+        newUrlCount = len(pictureUrls)
+        for url in pictureUrls:
+            print(url)
+            counter += 1
+            urllib.request.urlretrieve(
+                url, "/home/domh/Pictures/temp/{}.jpg".format(counter))
 
 
 getUrls()
