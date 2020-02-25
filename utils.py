@@ -1,5 +1,7 @@
 import urllib.request
 import boto3
+import shutil
+import os
 
 
 def getUsrPhotoUrls():
@@ -8,18 +10,31 @@ def getUsrPhotoUrls():
     table = client.Table("Moments-dev")
 
     response = table.get_item(
-        Key={"usr": "crookydan"}
+        Key={"usr": "test"}
     )
     pictureUrls = response["Item"]["picURL"]
 
     return pictureUrls
 
 
+counter = 0
+
+
 def downloadPhotos(previousUrls, currentUrls):
-    if len(previousUrls) != len(currentUrls):
-        counter = 0
-        for url in currentUrls:
-            # print(url)
+    global counter
+    additionalUrls = list(set(currentUrls) - set(previousUrls))
+    additionalTotal = len(currentUrls) - len(previousUrls)
+
+    if additionalTotal > 0:
+        print('ADDITIONAL URLS COMPARISON')
+        for url in additionalUrls:
+            print(url, 'INSIDE THE FOR LOOP')
             counter += 1
             urllib.request.urlretrieve(
-                url, "/home/domh/Pictures/temp/{}.jpg".format(counter))
+                url, "/home/domh/Pictures/temp/{}.jpeg".format(counter))
+        return False
+    elif additionalTotal == 0:
+        return
+    else:
+        # deletion functionality
+        return True
