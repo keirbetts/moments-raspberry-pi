@@ -25,7 +25,7 @@ class TestDownloadPhotos (unittest.TestCase):
             "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Five-pointed_star.svg/2000px-Five-pointed_star.svg.png"]
 
         downloadPhotos(testPreviousUrls, currentUrls)
-        result = os.listdir("/ home/domh/Pictures/temp")
+        result = os.listdir("/home/domh/Pictures/temp")
 
         self.assertEqual(len(result), 4)
 
