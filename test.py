@@ -1,5 +1,6 @@
 import unittest
 import os
+import glob
 from utils import getUsrPhotoUrls, downloadPhotos
 
 
@@ -14,6 +15,12 @@ class TestGetUrls (unittest.TestCase):
 
 class TestDownloadPhotos (unittest.TestCase):
     def test_downloadPhotos(self):
+
+        # clear directory before running test
+        reset = glob.glob("/home/domh/Pictures/temp/*")
+        for file in reset:
+            os.remove(file)
+
         testPreviousUrls = [
             "https://cdn3.iconfinder.com/data/icons/eldorado-stroke-symbols/40/shape_square-512.png",
             "https://dictionary.cambridge.org/images/thumb/triang_noun_001_18172.jpg?version=5.0.70",
