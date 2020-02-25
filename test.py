@@ -1,16 +1,14 @@
 import unittest
-from connection import dbConnection
+from utils import getUsrPhotoUrls
 
 
 class TestGetUrls (unittest.TestCase):
     def test_getUrls(self):
-        self.table = dbConnection()
-        self.response = table.get_item(
-            Key={"usr": "crookydan"}
-        )
-        self.pictureUrls = response["Item"]["picURL"]
+        result = getUsrPhotoUrls()
 
-        self.assertIsInstance(self.pictureUls, list)
+        self.assertIsInstance(result, list)
+        self.assertEqual(len(result), 3)
+        self.assertIsInstance(result[1], str)
 
 
 if __name__ == "__main__":
