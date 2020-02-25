@@ -25,6 +25,7 @@ class TestDownloadPhotos (unittest.TestCase):
             "https://cdn3.iconfinder.com/data/icons/eldorado-stroke-symbols/40/shape_square-512.png",
             "https://dictionary.cambridge.org/images/thumb/triang_noun_001_18172.jpg?version=5.0.70",
             "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Circle_-_black_simple.svg/1200px-Circle_-_black_simple.svg.png"]
+
         currentUrls = [
             "https://cdn3.iconfinder.com/data/icons/eldorado-stroke-symbols/40/shape_square-512.png",
             "https://dictionary.cambridge.org/images/thumb/triang_noun_001_18172.jpg?version=5.0.70",
