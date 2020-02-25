@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sudo feh -Z -F -Y -R3 -D3  /home/pi/Pictures/temp &
+feh -Z -F -Y -r -R3 -D3  /home/domh/Pictures/temp &
 
