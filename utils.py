@@ -8,7 +8,7 @@ def getUsrPhotoUrls():
     table = client.Table("Moments-dev")
 
     response = table.get_item(
-        Key={"usr": "test"}
+        Key={"usr": "crookydan"}
     )
     pictureUrls = response["Item"]["picURL"]
 
