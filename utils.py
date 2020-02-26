@@ -3,6 +3,8 @@ import boto3
 import shutil
 import os
 
+counter = 0
+
 
 def getUsrPhotoUrls():
     client = boto3.resource('dynamodb')
@@ -17,18 +19,13 @@ def getUsrPhotoUrls():
     return pictureUrls
 
 
-counter = 0
-
-
 def downloadPhotos(previousUrls, currentUrls):
     global counter
     additionalUrls = list(set(currentUrls) - set(previousUrls))
     additionalTotal = len(currentUrls) - len(previousUrls)
 
     if additionalTotal > 0:
-        print('ADDITIONAL URLS COMPARISON')
         for url in additionalUrls:
-            print(url, 'INSIDE THE FOR LOOP')
             counter += 1
             urllib.request.urlretrieve(
                 url, "/home/domh/Pictures/temp/{}.jpeg".format(counter))
@@ -38,3 +35,12 @@ def downloadPhotos(previousUrls, currentUrls):
     else:
         # deletion functionality
         return True
+
+
+def slideControl(stock):
+    if stock:
+        os.system('sh kill.sh')
+        os.system('sh feh_stock.sh')
+    elif stock == False:
+        os.system('sh kill.sh')
+        os.system('sh script_slideshow.sh')
