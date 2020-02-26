@@ -13,7 +13,7 @@ def getUsrPhotoUrls():
     table = client.Table("Moments-dev")
 
     response = table.get_item(
-        Key={"usr": "test"}
+        Key={"usr": "crookydan"}
     )
     pictureUrls = response["Item"]["picURL"]
 
@@ -29,9 +29,6 @@ def downloadPhotos(previousUrls, currentUrls):
         return addPhotosToStorage(list(currentUrls))
     elif additionalTotal > 0:
         return addPhotosToStorage(list(set(currentUrls) - set(previousUrls)))
-    elif additionalTotal == 0:
-        # photo replacement functionality, have to decide wether or not we will allow this in one process or if we will simply only let deletions and additions happen individually.
-        return
     else:
         return deletePhotosFromStorage(list(set(previousUrls) - set(currentUrls)))
 
