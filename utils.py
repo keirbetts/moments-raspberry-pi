@@ -3,6 +3,8 @@ import boto3
 import shutil
 import os
 
+counter = 0
+
 
 def getUsrPhotoUrls():
     client = boto3.resource('dynamodb')
@@ -15,9 +17,6 @@ def getUsrPhotoUrls():
     pictureUrls = response["Item"]["picURL"]
 
     return pictureUrls
-
-
-counter = 0
 
 
 def downloadPhotos(previousUrls, currentUrls):
@@ -38,3 +37,14 @@ def downloadPhotos(previousUrls, currentUrls):
     else:
         # deletion functionality
         return True
+
+
+def slideControl(stock):
+    if stock:
+        print("killing slideshow")
+        os.system('sh kill.sh')
+        os.system('sh feh_stock.sh')
+    elif stock == False:
+        print("killing slid show, starting stock")
+        os.system('sh kill.sh')
+        os.system('sh script_slideshow.sh')

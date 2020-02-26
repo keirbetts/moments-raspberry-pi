@@ -2,7 +2,7 @@
 import boto3
 import threading
 import os
-from utils import getUsrPhotoUrls, downloadPhotos
+from utils import getUsrPhotoUrls, downloadPhotos, slideControl
 
 
 def start():
@@ -32,15 +32,7 @@ def main():
         previousUrls = getUsrPhotoUrls()
         print(stock)
 
-        print(len(currentUrls))
-        if stock:
-            print("killing slideshow")
-            os.system('sh kill.sh')
-            os.system('sh feh_stock.sh')
-        elif stock == False:
-            print("killing slid show, starting stock")
-            os.system('sh kill.sh')
-            os.system('sh script_slideshow.sh')
+        slideControl(stock)
 
 
 start()
