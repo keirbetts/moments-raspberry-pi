@@ -25,11 +25,7 @@ def downloadPhotos(previousUrls, currentUrls):
     additionalTotal = len(currentUrls) - len(previousUrls)
 
     if additionalTotal > 0:
-        for url in additionalUrls:
-            counter += 1
-            urllib.request.urlretrieve(
-                url, "/home/domh/Pictures/temp/{}.jpeg".format(counter))
-        return False
+        addPhotosToStorage(additionalUrls)
     elif additionalTotal == 0:
         return
     else:
@@ -44,3 +40,11 @@ def slideControl(stock):
     elif stock == False:
         os.system('sh kill.sh')
         os.system('sh script_slideshow.sh')
+
+
+def addPhotosToStorage(additionalUrls):
+    for url in additionalUrls:
+        counter += 1
+        urllib.request.urlretrieve(
+            url, "/home/domh/Pictures/temp/{}.jpeg".format(counter))
+    return False
