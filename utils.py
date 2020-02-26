@@ -4,6 +4,7 @@ import shutil
 import os
 
 counter = 0
+lib = {}
 
 
 def getUsrPhotoUrls():
@@ -21,16 +22,15 @@ def getUsrPhotoUrls():
 
 def downloadPhotos(previousUrls, currentUrls):
     global counter
-    additionalUrls = list(set(currentUrls) - set(previousUrls))
     additionalTotal = len(currentUrls) - len(previousUrls)
 
     if additionalTotal > 0:
-        addPhotosToStorage(additionalUrls)
+        return addPhotosToStorage(list(set(currentUrls) - set(previousUrls)))
     elif additionalTotal == 0:
+        # photo replacement functionality, have to decide wether or not we will allow this in one process or if we will simply only let deletions and additions happen individually.
         return
     else:
-        # deletion functionality
-        return True
+        return deletePhotosFromStorage(list(set(previousUrls) - set(currentUrls)))
 
 
 def slideControl(stock):
@@ -43,8 +43,19 @@ def slideControl(stock):
 
 
 def addPhotosToStorage(additionalUrls):
+    global counter
+    global lib
     for url in additionalUrls:
         counter += 1
         urllib.request.urlretrieve(
             url, "/home/domh/Pictures/temp/{}.jpeg".format(counter))
+        lib[url] = counter
     return False
+
+
+def deletePhotosFromStorage(additionalUrls):
+    global lib
+    for url in additionalUrls:
+        os.remove("/home/domh/Pictures/temp/{}.jpeg".format(lib[url]))
+        del lib[url]
+    return True

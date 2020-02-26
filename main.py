@@ -24,7 +24,6 @@ def main():
 
     if sorted(set(previousUrls)) != sorted(set(currentUrls)):
         # download photos
-        downloadPhotos(previousUrls, currentUrls)
         stock = downloadPhotos(previousUrls, currentUrls)
         previousUrls = getUsrPhotoUrls()
 
