@@ -4,6 +4,7 @@ import shutil
 import os
 
 counter = 0
+lib = {}
 
 
 def getUsrPhotoUrls():
@@ -12,7 +13,7 @@ def getUsrPhotoUrls():
     table = client.Table("Moments-dev")
 
     response = table.get_item(
-        Key={"usr": "test"}
+        Key={"usr": "crookydan"}
     )
     pictureUrls = response["Item"]["picURL"]
 
@@ -21,20 +22,15 @@ def getUsrPhotoUrls():
 
 def downloadPhotos(previousUrls, currentUrls):
     global counter
-    additionalUrls = list(set(currentUrls) - set(previousUrls))
     additionalTotal = len(currentUrls) - len(previousUrls)
 
-    if additionalTotal > 0:
-        for url in additionalUrls:
-            counter += 1
-            urllib.request.urlretrieve(
-                url, "/home/domh/Pictures/temp/{}.jpeg".format(counter))
-        return False
-    elif additionalTotal == 0:
-        return
+    if len(os.listdir('/home/domh/Pictures/temp')) == 0:
+        # download all current urls
+        return addPhotosToStorage(list(currentUrls))
+    elif additionalTotal > 0:
+        return addPhotosToStorage(list(set(currentUrls) - set(previousUrls)))
     else:
-        # deletion functionality
-        return True
+        return deletePhotosFromStorage(list(set(previousUrls) - set(currentUrls)))
 
 
 def slideControl(stock):
@@ -44,3 +40,22 @@ def slideControl(stock):
     elif stock == False:
         os.system('sh kill.sh')
         os.system('sh script_slideshow.sh')
+
+
+def addPhotosToStorage(additionalUrls):
+    global counter
+    global lib
+    for url in additionalUrls:
+        counter += 1
+        urllib.request.urlretrieve(
+            url, "/home/domh/Pictures/temp/{}.jpeg".format(counter))
+        lib[url] = counter
+    return False
+
+
+def deletePhotosFromStorage(additionalUrls):
+    global lib
+    for url in additionalUrls:
+        os.remove("/home/domh/Pictures/temp/{}.jpeg".format(lib[url]))
+        del lib[url]
+    return True
