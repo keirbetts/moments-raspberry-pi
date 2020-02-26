@@ -58,4 +58,8 @@ def deletePhotosFromStorage(additionalUrls):
     for url in additionalUrls:
         os.remove("/home/domh/Pictures/temp/{}.jpeg".format(lib[url]))
         del lib[url]
-    return True
+
+    if len(os.listdir('/home/domh/Pictures/temp')) == 0:
+        return True
+    else:
+        return False
