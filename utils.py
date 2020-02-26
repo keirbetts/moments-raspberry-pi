@@ -24,7 +24,7 @@ def downloadPhotos(previousUrls, currentUrls):
     global counter
     additionalTotal = len(currentUrls) - len(previousUrls)
 
-    if len(os.listdir('/home/pi/Pictures/temp')) == 0:
+    if len(os.listdir('/home/domh/Pictures/temp')) == 0:
         # download all current urls
         return addPhotosToStorage(list(currentUrls))
     elif additionalTotal > 0:
@@ -50,16 +50,18 @@ def addPhotosToStorage(additionalUrls):
         urllib.request.urlretrieve(
             url, "/home/domh/Pictures/temp/{}.jpeg".format(counter))
         lib[url] = counter
+
+    print(lib)
     return False
 
 
 def deletePhotosFromStorage(additionalUrls):
     global lib
     for url in additionalUrls:
-        os.remove("/home/pi/Pictures/temp/{}.jpeg".format(lib[url]))
+        os.remove("/home/domh/Pictures/temp/{}.jpeg".format(lib[url]))
         del lib[url]
 
-    if len(os.listdir('/home/pi/Pictures/temp')) == 0:
+    if len(os.listdir('/home/domh/Pictures/temp')) == 0:
         return True
     else:
         return False
@@ -69,3 +71,4 @@ def initDownload():
     global counter
     initialUrls = getUsrPhotoUrls()
     addPhotosToStorage(initialUrls)
+    return initialUrls
