@@ -63,3 +63,9 @@ def deletePhotosFromStorage(additionalUrls):
         return True
     else:
         return False
+
+
+def initDownload():
+    global counter
+    initialUrls = getUsrPhotoUrls()
+    addPhotosToStorage(initialUrls)
