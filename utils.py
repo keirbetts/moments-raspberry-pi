@@ -24,7 +24,10 @@ def downloadPhotos(previousUrls, currentUrls):
     global counter
     additionalTotal = len(currentUrls) - len(previousUrls)
 
-    if additionalTotal > 0:
+    if len(os.listdir('/home/domh/Pictures/temp')) == 0:
+        # download all current urls
+        return addPhotosToStorage(list(currentUrls))
+    elif additionalTotal > 0:
         return addPhotosToStorage(list(set(currentUrls) - set(previousUrls)))
     elif additionalTotal == 0:
         # photo replacement functionality, have to decide wether or not we will allow this in one process or if we will simply only let deletions and additions happen individually.
