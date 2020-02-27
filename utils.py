@@ -2,34 +2,67 @@ import urllib.request
 import boto3
 import shutil
 import os
+import glob
 
 counter = 0
 lib = {}
+previousUser = ""
+previousUrls = []
 
 
 def getUsrPhotoUrls():
+    global previousUser
+    global counter
+    global previousUrls
+    global lib
     client = boto3.resource('dynamodb')
     # connect to table
     table = client.Table("Moments-dev")
 
-    response = table.get_item(
-        Key={"usr": "crookydan"}
+    getCurrentUser = table.get_item(
+        Key={"usr": "Active"}
     )
+
+    currentUser = getCurrentUser["Item"]["ref"]
+
+    print(currentUser)
+
+    response = table.get_item(
+        Key={"usr": currentUser}
+    )
+
     pictureUrls = response["Item"]["picURL"]
 
-    return pictureUrls
+    if previousUser != currentUser:
+        path = glob.glob("/home/domh/Pictures/temp/*")
+        for item in path:
+            os.remove(item)
+        lib = {}
+        previousUser = currentUser
+        counter = 0
+        return pictureUrls
+    else:
+        previousUrls = pictureUrls
+        return previousUrls
 
 
 def downloadPhotos(previousUrls, currentUrls):
     global counter
+
     additionalTotal = len(currentUrls) - len(previousUrls)
 
-    if len(os.listdir('/home/domh/Pictures/temp')) == 0:
+    if len(previousUrls) == 0 and len(currentUrls) == 0:
+        return True
+
+    elif len(os.listdir('/home/domh/Pictures/temp')) == 0:
+
         # download all current urls
         return addPhotosToStorage(list(currentUrls))
     elif additionalTotal > 0:
+
         return addPhotosToStorage(list(set(currentUrls) - set(previousUrls)))
     else:
+
         return deletePhotosFromStorage(list(set(previousUrls) - set(currentUrls)))
 
 
@@ -43,6 +76,10 @@ def slideControl(stock):
 
 
 def addPhotosToStorage(additionalUrls):
+
+    if len(additionalUrls) == 0:
+        return True
+
     global counter
     global lib
     for url in additionalUrls:
@@ -51,11 +88,10 @@ def addPhotosToStorage(additionalUrls):
             url, "/home/domh/Pictures/temp/{}.jpeg".format(counter))
         lib[url] = counter
 
-    print(lib)
     return False
 
 
-def deletePhotosFromStorage(additionalUrls):
+def deletePhotosFromStorage(additionalUrls=[]):
     global lib
     for url in additionalUrls:
         os.remove("/home/domh/Pictures/temp/{}.jpeg".format(lib[url]))

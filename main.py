@@ -11,11 +11,13 @@ stock = True
 
 def start():
     global previousUrls
+    global stock
     # start slide show
     os.system('sh feh_stock.sh')
     previousUrls = initDownload()
     if len(previousUrls) > 0:
-        slideControl(False)
+        stock = False
+        slideControl(stock)
 
 
 def main():
@@ -25,14 +27,20 @@ def main():
 
     # get photo urls
     currentUrls = getUsrPhotoUrls()
-    print(sorted(set(previousUrls)) != sorted(set(currentUrls)))
 
-    if sorted(set(previousUrls)) != sorted(set(currentUrls)):
-        # download photos
-        stock = downloadPhotos(previousUrls, currentUrls)
-        previousUrls = currentUrls
+    while currentUrls != previousUrls:
 
-        slideControl(stock)
+        if sorted(set(previousUrls)) != sorted(set(currentUrls)):
+            # download photos
+
+            stock = downloadPhotos(previousUrls, currentUrls)
+
+            previousUrls = currentUrls
+
+            slideControl(stock)
+        elif len(os.listdir("/home/domh/Pictures/temp")) < 1 and previousUrls == currentUrls:
+            stock = downloadPhotos(previousUrls, currentUrls)
+            slideControl(stock)
 
 
 start()
