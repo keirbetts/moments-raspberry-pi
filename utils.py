@@ -51,7 +51,6 @@ def addPhotosToStorage(additionalUrls):
             url, "/home/domh/Pictures/temp/{}.jpeg".format(counter))
         lib[url] = counter
 
-    print(lib)
     return False
 
 
