@@ -28,12 +28,19 @@ def main():
     # get photo urls
     currentUrls = getUsrPhotoUrls()
 
-    if sorted(set(previousUrls)) != sorted(set(currentUrls)):
-        # download photos
-        stock = downloadPhotos(previousUrls, currentUrls)
-        previousUrls = currentUrls
+    while currentUrls != previousUrls:
 
-        slideControl(stock)
+        if sorted(set(previousUrls)) != sorted(set(currentUrls)):
+            # download photos
+
+            stock = downloadPhotos(previousUrls, currentUrls)
+
+            previousUrls = currentUrls
+
+            slideControl(stock)
+        elif len(os.listdir("/home/domh/Pictures/temp")) < 1 and previousUrls == currentUrls:
+            stock = downloadPhotos(previousUrls, currentUrls)
+            slideControl(stock)
 
 
 start()
