@@ -20,6 +20,7 @@ GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 faceClient = boto3.client('rekognition')
 s3Client = boto3.client("s3")
+dynamoClient = boto3.resource("dynamodb")
 
 
 
@@ -264,6 +265,23 @@ def runFaceCompare():
 
 
 # runFaceCompare()
+def setActiveUser(ref):
+    
+    user = re.match(r"(.*?)-",ref).group(1)
+    
+    print(user)
+    
+    table = dynamoClient.Table("Moments-dev")
+    
+    setActiveUser = table.update_item(
+            Key={"usr":"Active"},
+            UpdateExpression = "SET refActive = :val",
+            ExpressionAttributeValues ={
+                ":val":user,    
+            },
+            ReturnValues = "UPDATED_NEW"
+        )
+    
 
 
 def start():
@@ -273,7 +291,7 @@ def start():
         uploadToS3()
         runFaceCompare()
     else:
-        print("sorry could't verify your face")
+        print("sorry couldn't verify your face")
 
 while True:
     if(GPIO.input(21) == True):
