@@ -255,7 +255,9 @@ def runFaceCompare():
             confidence = response["FaceMatches"][0]["Similarity"]
 
         if (confidence > 90):
-            print("Hi, {}".format(ref))
+            setActiveUser(ref)
+            os.system('sh kill.sh')
+            os.system('sh script_slideshow.sh')
             return True
         else:
             count -= 1
