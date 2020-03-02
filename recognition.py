@@ -10,7 +10,6 @@ from picamera import PiCamera
 import os
 from time import sleep
 import RPi.GPIO as GPIO
-#from main import start
 
 GPIO.setmode(GPIO.BCM)
 
@@ -49,7 +48,6 @@ def runpicam():
         rawCapture.truncate(0)
         for (x, y, w, h) in faces:
             cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
-        #cv2.imshow("Image", image)
         if key == ord("q"):
             break
 
@@ -67,7 +65,6 @@ def runpicam():
             camera.stop_preview()
             camera.close()
             return False
-           # Draw a rectangle around the faces
 
 
 def uploadToS3():
@@ -83,7 +80,6 @@ def getAllFaces():
     bucket = s3Client.list_objects_v2(Bucket="face-recogonition")
     for obj in bucket["Contents"]:
         faceList.append(obj["Key"])
-
     faceRef = filter(lambda item: "reference" in item, faceList)
     return faceRef
 
@@ -91,9 +87,7 @@ def getAllFaces():
 def runFaceCompare():
     referenceList = list(getAllFaces())
     verified = ""
-
     count = len(referenceList)
-
     for ref in referenceList:
         response = faceClient.compare_faces(
             SourceImage={
@@ -112,10 +106,8 @@ def runFaceCompare():
             },
             SimilarityThreshold=70.0
         )
-
         # get confidence
         confidence = 0
-
         if len(response["FaceMatches"]) != 0:
             confidence = response["FaceMatches"][0]["Similarity"]
 
@@ -131,15 +123,10 @@ def runFaceCompare():
             return False
 
 
-# runFaceCompare()
 def setActiveUser(ref):
-
     user = re.match(r"(.*?)-", ref).group(1)
-
     print(user)
-
     table = dynamoClient.Table("Moments-dev")
-
     setActiveUser = table.update_item(
         Key={"usr": "Active"},
         UpdateExpression="SET refActive = :val",
