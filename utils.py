@@ -23,7 +23,7 @@ def getUsrPhotoUrls():
         Key={"usr": "Active"}
     )
 
-    currentUser = getCurrentUser["Item"]["ref"]
+    currentUser = getCurrentUser["Item"]["refActive"]
 
     print(currentUser)
 
@@ -40,6 +40,9 @@ def getUsrPhotoUrls():
         lib = {}
         previousUser = currentUser
         counter = 0
+
+        print(len(os.listdir('/home/domh/Pictures/temp')),
+              len(os.listdir('/home/domh/Pictures/temp')) == 0)
         return pictureUrls
     else:
         previousUrls = pictureUrls
@@ -50,12 +53,11 @@ def downloadPhotos(previousUrls, currentUrls):
     global counter
 
     additionalTotal = len(currentUrls) - len(previousUrls)
-
+    print(additionalTotal, "ADDITIONAL TOTAL")
     if len(previousUrls) == 0 and len(currentUrls) == 0:
         return True
 
     elif len(os.listdir('/home/domh/Pictures/temp')) == 0:
-
         # download all current urls
         return addPhotosToStorage(list(currentUrls))
     elif additionalTotal > 0:
@@ -93,13 +95,17 @@ def addPhotosToStorage(additionalUrls):
 
 def deletePhotosFromStorage(additionalUrls=[]):
     global lib
-    for url in additionalUrls:
-        os.remove("/home/domh/Pictures/temp/{}.jpeg".format(lib[url]))
-        del lib[url]
 
     if len(os.listdir('/home/domh/Pictures/temp')) == 0:
         return True
     else:
+        for url in additionalUrls:
+            os.remove("/home/domh/Pictures/temp/{}.jpeg".format(lib[url]))
+            del lib[url]
+
+        if len(os.listdir('/home/domh/Pictures/temp')) == 0:
+            return True
+
         return False
 
 

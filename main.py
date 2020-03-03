@@ -31,6 +31,7 @@ def main():
     while currentUrls != previousUrls:
 
         if sorted(set(previousUrls)) != sorted(set(currentUrls)):
+            print("inside elif")
             # download photos
 
             stock = downloadPhotos(previousUrls, currentUrls)
@@ -41,6 +42,9 @@ def main():
         elif len(os.listdir("/home/domh/Pictures/temp")) < 1 and previousUrls == currentUrls:
             stock = downloadPhotos(previousUrls, currentUrls)
             slideControl(stock)
+
+        else:
+            slideControl(True)
 
 
 start()
